@@ -1,3 +1,5 @@
+"use client";
+
 export default function StudentPortalPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAFAF7] font-sans">

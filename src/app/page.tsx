@@ -5,7 +5,7 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-[#FAFAF7]">
       <div className="text-center max-w-lg px-6">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#1A1A1A] mb-6">
-          <span className="text-[#166534] text-2xl font-bold">N</span>
+          <span className="text-primary text-2xl font-bold">N</span>
         </div>
         <h1 className="text-4xl font-bold text-[#0F0F0F] mb-3" style={{ fontFamily: "var(--font-display)" }}>
           NexusOS
@@ -16,7 +16,7 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/auth/login"
-            className="px-6 py-3 rounded-xl bg-[#166534] text-white font-semibold hover:bg-[#14532D] transition-colors"
+            className="px-6 py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary-hover transition-colors"
           >
             Sign In
           </Link>

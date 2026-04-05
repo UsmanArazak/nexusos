@@ -78,7 +78,7 @@ export interface Staff {
   first_name: string;
   last_name: string;
   role: Extract<UserRole, "teacher" | "staff">;
-  department?: string;
+  class_assigned?: string;
   avatar_url?: string;
   created_at: string;
 }

@@ -84,7 +84,7 @@ create table public.staff (
   first_name       text not null,
   last_name        text not null,
   role             text not null check (role in ('teacher','staff')),
-  department       text,
+  class_assigned   text,
   avatar_url       text,
   created_at       timestamptz not null default now(),
   unique (school_id, employee_number)

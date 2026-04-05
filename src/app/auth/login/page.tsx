@@ -46,7 +46,7 @@ export default function LoginPage() {
       <div className="bg-white border border-[#E8E8E2] rounded-2xl p-6 sm:p-8 w-full max-w-md shadow-sm">
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#1A1A1A] mb-4">
-            <span className="text-[#C8A84B] font-bold text-xl">N</span>
+            <span className="text-[#166534] font-bold text-xl">N</span>
           </div>
           <h1 className="text-2xl font-bold text-[#0F0F0F]" style={{ fontFamily: "var(--font-display)" }}>
             Welcome back
@@ -72,13 +72,13 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@school.edu"
               required
-              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
             />
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-[#4B4B4B] mb-1 flex justify-between">
               <span>Password</span>
-              <a href="#" className="text-[#C8A84B] hover:text-[#A8892E] transition-colors">Forgot?</a>
+              <a href="#" className="text-[#166534] hover:text-[#14532D] transition-colors">Forgot?</a>
             </label>
             <input
               id="password"
@@ -87,13 +87,13 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
             />
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-[#C8A84B] text-white font-semibold hover:bg-[#A8892E] transition-all text-sm disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+            className="w-full py-3 rounded-xl bg-[#166534] text-white font-semibold hover:bg-[#14532D] transition-all text-sm disabled:opacity-70 disabled:cursor-not-allowed mt-2"
           >
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
@@ -101,7 +101,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-[#9B9B9B] mt-6">
           Don't have a workspace yet?{" "}
-          <Link href="/register" className="text-[#0F0F0F] font-medium hover:text-[#C8A84B] transition-colors">
+          <Link href="/register" className="text-[#0F0F0F] font-medium hover:text-[#166534] transition-colors">
             Register your school
           </Link>
         </p>

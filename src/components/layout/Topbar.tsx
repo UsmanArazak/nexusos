@@ -24,7 +24,7 @@ export default function Topbar() {
           🔔
         </button>
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-[#C8A84B] flex items-center justify-center text-xs font-bold text-white">
+        <div className="w-8 h-8 rounded-full bg-[#166534] flex items-center justify-center text-xs font-bold text-white">
           A
         </div>
       </div>

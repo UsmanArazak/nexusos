@@ -81,7 +81,7 @@ export default function RegisterPage() {
       <div className="bg-white border border-[#E8E8E2] rounded-2xl p-6 sm:p-8 w-full max-w-xl shadow-sm">
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#1A1A1A] mb-4">
-            <span className="text-[#C8A84B] font-bold text-xl">N</span>
+            <span className="text-[#166534] font-bold text-xl">N</span>
           </div>
           <h1 className="text-2xl font-bold text-[#0F0F0F]" style={{ fontFamily: "var(--font-display)" }}>
             Register your school
@@ -109,7 +109,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               placeholder="e.g. Greenfield Academy"
               required
-              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
             />
           </div>
           
@@ -125,7 +125,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="John"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
               />
             </div>
             <div>
@@ -139,7 +139,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="Doe"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
               />
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               placeholder="admin@greenfield.edu"
               required
-              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
             />
           </div>
 
@@ -172,7 +172,7 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 required
                 minLength={8}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
               />
             </div>
             <div>
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                 placeholder="••••••••"
                 required
                 minLength={8}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#C8A84B] text-sm transition-all"
+                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E8E2] bg-[#FAFAF7] focus:outline-none focus:ring-2 focus:ring-[#166534] text-sm transition-all"
               />
             </div>
           </div>

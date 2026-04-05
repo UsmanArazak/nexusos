@@ -33,7 +33,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="px-5 py-6 border-b border-white/10">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#C8A84B] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-[#166534] flex items-center justify-center">
             <span className="text-[#1A1A1A] font-bold text-sm">N</span>
           </div>
           <span className="text-white font-bold text-lg tracking-tight">NexusOS</span>
@@ -48,7 +48,7 @@ export default function Sidebar() {
             href={item.href}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
               isActive(item.href)
-                ? "bg-[#C8A84B] text-[#1A1A1A]"
+                ? "bg-[#166534] text-[#1A1A1A]"
                 : "text-white/70 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -66,7 +66,7 @@ export default function Sidebar() {
             href={item.href}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
               isActive(item.href)
-                ? "bg-[#C8A84B] text-[#1A1A1A]"
+                ? "bg-[#166534] text-[#1A1A1A]"
                 : "text-white/70 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -80,7 +80,7 @@ export default function Sidebar() {
           onClick={() => signOut()}
           className="mt-3 w-full px-3 py-2.5 rounded-xl bg-white/5 flex items-center gap-3 hover:bg-[#B91C1C]/20 hover:text-white transition-colors text-left"
         >
-          <div className="w-7 h-7 flex-shrink-0 rounded-full bg-[#C8A84B] flex items-center justify-center text-xs font-bold text-[#1A1A1A]">
+          <div className="w-7 h-7 flex-shrink-0 rounded-full bg-[#166534] flex items-center justify-center text-xs font-bold text-[#1A1A1A]">
             A
           </div>
           <div className="flex-1 min-w-0">

@@ -32,7 +32,7 @@ export default async function SchoolPublicPage({ params }: Props) {
       <main className="max-w-4xl mx-auto px-6 py-12">
         <h1 className="text-4xl font-bold text-[#0F0F0F] mb-4" style={{ fontFamily: "var(--font-display)" }}>
           Welcome to{" "}
-          <span className="text-[#C8A84B] capitalize">{schoolSlug.replace(/-/g, " ")}</span>
+          <span className="text-[#166534] capitalize">{schoolSlug.replace(/-/g, " ")}</span>
         </h1>
         <p className="text-[#4B4B4B]">
           This is the public-facing website for this school. Content will be managed by the school admin via NexusOS.

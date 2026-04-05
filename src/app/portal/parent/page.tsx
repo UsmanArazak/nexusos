@@ -10,7 +10,7 @@ export default function ParentPortalPage() {
         <p className="text-[#4B4B4B]">Welcome back. View your children's progress here (coming soon).</p>
         <button
           onClick={() => {}}
-          className="mt-6 px-6 py-2.5 rounded-xl bg-[#C8A84B] text-white font-semibold hover:bg-[#A8892E] transition-colors"
+          className="mt-6 px-6 py-2.5 rounded-xl bg-[#166534] text-white font-semibold hover:bg-[#14532D] transition-colors"
         >
           Sign Out
         </button>

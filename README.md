@@ -30,20 +30,19 @@ NexusOS is a platform where any school can self-register and get their own **com
 
 ---
 
-## 🎨 Design System
+## 🎨 Design System (AuraUI)
 
-| Token | Value |
-|-------|-------|
-| Primary / Gold | `#C8A84B` |
-| Sidebar | `#1A1A1A` |
-| Background White | `#FFFFFF` |
-| Background Cream | `#FAFAF7` |
-| Text Primary | `#0F0F0F` |
-| Text Secondary | `#4B4B4B` |
-| Text Muted | `#9B9B9B` |
-| Border | `#E8E8E2` |
+NexusOS uses the **AuraUI** design system. For the full specification, see [AuraUI.md](./AuraUI.md).
+
+| Token | Value | Description |
+|-------|-------|-------------|
+| **Primary** | `#7C3AED` | Purple: branding, active states, buttons |
+| **Background**| `#F3F4F6` | Light Grey: main page background |
+| **Sidebar** | `#FFFFFF` | White: clean navigation background |
+| **Text** | `#1C1C1C` | Dark Charcoal: primary typography |
 
 Fonts: **Inter** (body) + **Plus Jakarta Sans** (headings)
+
 
 ---
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: "⊞" },
@@ -74,15 +75,19 @@ export default function Sidebar() {
           </Link>
         ))}
         {/* User chip */}
-        <div className="mt-3 px-3 py-2.5 rounded-xl bg-white/5 flex items-center gap-3">
-          <div className="w-7 h-7 rounded-full bg-[#C8A84B] flex items-center justify-center text-xs font-bold text-[#1A1A1A]">
+        <button 
+          title="Sign out"
+          onClick={() => signOut()}
+          className="mt-3 w-full px-3 py-2.5 rounded-xl bg-white/5 flex items-center gap-3 hover:bg-[#B91C1C]/20 hover:text-white transition-colors text-left"
+        >
+          <div className="w-7 h-7 flex-shrink-0 rounded-full bg-[#C8A84B] flex items-center justify-center text-xs font-bold text-[#1A1A1A]">
             A
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-xs font-medium truncate">School Admin</p>
-            <p className="text-white/40 text-xs truncate">admin@school.edu</p>
+            <p className="text-white text-xs font-medium truncate">Sign Out</p>
+            <p className="text-white/40 text-[10px] truncate">Current Workspace</p>
           </div>
-        </div>
+        </button>
       </div>
     </aside>
   );

@@ -1,32 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand Colors */
-  --color-gold: #166534;
-  --color-gold-light: #DFC278;
-  --color-gold-dark: #14532D;
+  /* ─── Brand Colors ────────────────────────────────────────
+   * To change the primary accent color across the entire app,
+   * update ONLY --color-primary and --color-primary-hover below.
+   * Every component references these variables automatically.
+   * ─────────────────────────────────────────────────────── */
+  --color-primary: #7C3AED;        /* Purple */
+  --color-primary-hover: #6D28D9;  /* Darker Purple */
+  --color-primary-light: #EDE9FE;  /* Soft Purple bg */
 
   /* Sidebar */
-  --color-sidebar: #1A1A1A;
-  --color-sidebar-hover: #2A2A2A;
-  --color-sidebar-active: #333333;
+  --color-sidebar: #FFFFFF;
+  --color-sidebar-border: #E5E7EB;
 
   /* Backgrounds */
+  --color-bg-page: #F3F4F6;
   --color-bg-white: #FFFFFF;
   --color-bg-cream: #FAFAF7;
   --color-bg-muted: #F4F4F0;
 
   /* Text */
-  --color-text-primary: #0F0F0F;
-  --color-text-secondary: #4B4B4B;
-  --color-text-muted: #9B9B9B;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4B5563;
+  --color-text-muted: #9CA3AF;
 
   /* Borders */
-  --color-border: #E8E8E2;
-  --color-border-strong: #D0D0C8;
+  --color-border: #E5E7EB;
+  --color-border-strong: #D1D5DB;
 
   /* Status Colors */
-  --color-success: #2E7D52;
+  --color-success: #166534;
   --color-warning: #B45309;
   --color-error: #B91C1C;
   --color-info: #1D4ED8;
@@ -37,7 +41,9 @@
 }
 
 @theme inline {
-  --color-gold: var(--color-gold);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-light: var(--color-primary-light);
   --color-sidebar: var(--color-sidebar);
   --color-cream: var(--color-bg-cream);
   --font-sans: var(--font-sans);
@@ -54,7 +60,7 @@ html {
 }
 
 body {
-  background-color: var(--color-bg-white);
+  background-color: var(--color-bg-page);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   line-height: 1.6;

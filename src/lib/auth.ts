@@ -36,7 +36,14 @@ export const authOptions: NextAuthOptions = {
         const userId = authData.user.id;
 
         // 2. Fetch the user's profile to get their role and school_id
-        const { data: profile, error: profileError } = await supabase
+        // We use the service_role key here because we need to bypass RLS to securely fetch 
+        // the profile during the server-side authentication handshake.
+        const supabaseAdmin = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.SUPABASE_SERVICE_ROLE_KEY!
+        );
+
+        const { data: profile, error: profileError } = await supabaseAdmin
           .from("profiles")
           .select("role, school_id, first_name, last_name")
           .eq("id", userId)

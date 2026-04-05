@@ -42,9 +42,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FAFAF7] px-4 font-sans">
-      <div className="bg-white border border-[#E8E8E2] rounded-2xl p-8 w-full max-w-md shadow-sm">
-        <div className="text-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#FAFAF7] px-4 sm:px-6 py-8 font-sans">
+      <div className="bg-white border border-[#E8E8E2] rounded-2xl p-6 sm:p-8 w-full max-w-md shadow-sm">
+        <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#1A1A1A] mb-4">
             <span className="text-[#C8A84B] font-bold text-xl">N</span>
           </div>

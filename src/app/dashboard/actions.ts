@@ -151,3 +151,138 @@ export async function deleteSubject(id: string) {
     return { success: false, error: error.message };
   }
 }
+
+// ─── Students Actions ────────────────────────────────────────────────────────
+
+export async function generateAdmissionNumber() {
+  try {
+    const schoolId = await getSchoolId();
+    const year = new Date().getFullYear();
+
+    // Get school slug for prefix
+    const { data: school } = await supabaseAdmin
+      .from("schools")
+      .select("slug")
+      .eq("id", schoolId)
+      .single();
+
+    if (!school) throw new Error("School not found");
+    const prefix = school.slug.substring(0, 2).toUpperCase();
+
+    // Count students enrolled in this year to get sequence
+    const { count } = await supabaseAdmin
+      .from("students")
+      .select("*", { count: "exact", head: true })
+      .eq("school_id", schoolId)
+      .gte("created_at", `${year}-01-01T00:00:00`)
+      .lte("created_at", `${year}-12-31T23:59:59`);
+
+    const sequence = ((count || 0) + 1).toString().padStart(3, "0");
+    return `${prefix}/${year}/${sequence}`;
+  } catch (error) {
+    console.error("Error generating admission number:", error);
+    return "";
+  }
+}
+
+export async function getStudents(params: {
+  query?: string;
+  classId?: string;
+  page?: number;
+}) {
+  try {
+    const schoolId = await getSchoolId();
+    const limit = 20;
+    const offset = ((params.page || 1) - 1) * limit;
+
+    let supabaseQuery = supabaseAdmin
+      .from("students")
+      .select("*, classes(name, level)", { count: "exact" })
+      .eq("school_id", schoolId)
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (params.query) {
+      supabaseQuery = supabaseQuery.or(
+        `first_name.ilike.%${params.query}%,last_name.ilike.%${params.query}%,admission_number.ilike.%${params.query}%`
+      );
+    }
+
+    if (params.classId && params.classId !== "all") {
+      supabaseQuery = supabaseQuery.eq("class_id", params.classId);
+    }
+
+    const { data, count, error } = await supabaseQuery;
+    if (error) throw error;
+
+    return { data, count, success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function addStudent(formData: any) {
+  try {
+    const schoolId = await getSchoolId();
+
+    // Check for unique admission number
+    const { data: existing } = await supabaseAdmin
+      .from("students")
+      .select("id")
+      .eq("school_id", schoolId)
+      .eq("admission_number", formData.admission_number)
+      .single();
+
+    if (existing) throw new Error("Admission number already exists in this school.");
+
+    const { error } = await supabaseAdmin.from("students").insert({
+      ...formData,
+      school_id: schoolId,
+    });
+
+    if (error) throw error;
+    revalidatePath("/dashboard/students");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateStudent(id: string, formData: any) {
+  try {
+    const schoolId = await getSchoolId();
+    // Remove admission_number from update to ensure it's immutable as per requirements
+    const { admission_number, ...updateData } = formData;
+
+    const { error } = await supabaseAdmin
+      .from("students")
+      .update(updateData)
+      .eq("id", id)
+      .eq("school_id", schoolId);
+
+    if (error) throw error;
+    revalidatePath("/dashboard/students");
+    revalidatePath(`/dashboard/students/${id}`);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteStudent(id: string) {
+  try {
+    const schoolId = await getSchoolId();
+
+    const { error } = await supabaseAdmin
+      .from("students")
+      .delete()
+      .eq("id", id)
+      .eq("school_id", schoolId);
+
+    if (error) throw error;
+    revalidatePath("/dashboard/students");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}

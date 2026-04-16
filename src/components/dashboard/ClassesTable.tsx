@@ -40,8 +40,8 @@ export default function ClassesTable({ initialClasses }: ClassesTableProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.arm.trim()) {
-      setToast({ message: "Please fill in all fields", type: "error" });
+    if (!formData.name.trim()) {
+      setToast({ message: "Class name is required", type: "error" });
       return;
     }
 
@@ -171,10 +171,10 @@ export default function ClassesTable({ initialClasses }: ClassesTableProps) {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-bold text-[#1C1C1C] uppercase tracking-wider">Arm</label>
+            <label className="text-xs font-bold text-[#1C1C1C] uppercase tracking-wider">Arm (Optional)</label>
             <input
               type="text"
-              placeholder="e.g. A, B, C"
+              placeholder="e.g. A, B, C (Optional)"
               className="w-full px-5 py-3.5 rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] focus:border-[#7C3AED] focus:ring-4 focus:ring-[#7C3AED]/10 transition-all font-medium text-sm text-[#1C1C1C] placeholder-[#9CA3AF]"
               value={formData.arm}
               onChange={(e) => setFormData({ ...formData, arm: e.target.value })}

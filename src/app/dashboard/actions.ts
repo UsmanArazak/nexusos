@@ -286,3 +286,134 @@ export async function deleteStudent(id: string) {
     return { success: false, error: error.message };
   }
 }
+
+// ─── Staff Actions ───────────────────────────────────────────────────────────
+
+export async function generateEmployeeNumber() {
+  try {
+    const schoolId = await getSchoolId();
+    const year = new Date().getFullYear();
+
+    const { data: school } = await supabaseAdmin
+      .from("schools")
+      .select("slug")
+      .eq("id", schoolId)
+      .single();
+
+    if (!school) throw new Error("School not found");
+    const prefix = school.slug.substring(0, 2).toUpperCase();
+
+    const { count } = await supabaseAdmin
+      .from("staff")
+      .select("*", { count: "exact", head: true })
+      .eq("school_id", schoolId)
+      .gte("created_at", `${year}-01-01T00:00:00`);
+
+    const sequence = ((count || 0) + 1).toString().padStart(3, "0");
+    return `${prefix}/ST/${year}/${sequence}`;
+  } catch (error) {
+    console.error("Error generating employee number:", error);
+    return "";
+  }
+}
+
+export async function getStaff(params: {
+  query?: string;
+  role?: string;
+  page?: number;
+}) {
+  try {
+    const schoolId = await getSchoolId();
+    const limit = 20;
+    const offset = ((params.page || 1) - 1) * limit;
+
+    let supabaseQuery = supabaseAdmin
+      .from("staff")
+      .select("*", { count: "exact" })
+      .eq("school_id", schoolId)
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    if (params.query) {
+      supabaseQuery = supabaseQuery.or(
+        `first_name.ilike.%${params.query}%,last_name.ilike.%${params.query}%,employee_number.ilike.%${params.query}%`
+      );
+    }
+
+    if (params.role && params.role !== "all") {
+      supabaseQuery = supabaseQuery.eq("role", params.role);
+    }
+
+    const { data, count, error } = await supabaseQuery;
+    if (error) throw error;
+
+    return { data, count, success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function addStaff(formData: any) {
+  try {
+    const schoolId = await getSchoolId();
+
+    const { data: existing } = await supabaseAdmin
+      .from("staff")
+      .select("id")
+      .eq("school_id", schoolId)
+      .eq("employee_number", formData.employee_number)
+      .single();
+
+    if (existing) throw new Error("Employee number already exists in this school.");
+
+    const { error } = await supabaseAdmin.from("staff").insert({
+      ...formData,
+      school_id: schoolId,
+    });
+
+    if (error) throw error;
+    revalidatePath("/dashboard/staff");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateStaff(id: string, formData: any) {
+  try {
+    const schoolId = await getSchoolId();
+    const { employee_number, ...updateData } = formData;
+
+    const { error } = await supabaseAdmin
+      .from("staff")
+      .update(updateData)
+      .eq("id", id)
+      .eq("school_id", schoolId);
+
+    if (error) throw error;
+    revalidatePath("/dashboard/staff");
+    revalidatePath(`/dashboard/staff/${id}`);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteStaff(id: string) {
+  try {
+    const schoolId = await getSchoolId();
+
+    const { error } = await supabaseAdmin
+      .from("staff")
+      .delete()
+      .eq("id", id)
+      .eq("school_id", schoolId);
+
+    if (error) throw error;
+    revalidatePath("/dashboard/staff");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+

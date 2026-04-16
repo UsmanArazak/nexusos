@@ -80,9 +80,15 @@ export default function StudentProfile({ student }: StudentProfileProps) {
         {/* Tab-like Placeholders */}
         <div className="lg:col-span-2 space-y-8">
           <div className="bg-white rounded-[32px] border border-[#E5E7EB] p-8 shadow-sm text-center">
-             <div className="w-16 h-16 rounded-2xl bg-[#F3F4F6] text-[#9CA3AF] flex items-center justify-center mx-auto mb-4 text-2xl">📊</div>
+             <div className="w-16 h-16 rounded-2xl bg-[#EDE9FE] text-[#7C3AED] flex items-center justify-center mx-auto mb-4 text-2xl">📊</div>
              <h4 className="text-lg font-bold text-[#1C1C1C]">Academic Performance</h4>
-             <p className="text-sm text-[#6B7280] max-w-xs mx-auto mt-2">No results found for this student. Academic reports will appear here once the Results module is active.</p>
+             <p className="text-sm text-[#6B7280] max-w-xs mx-auto mt-2 mb-4">View term-by-term academic results and report cards.</p>
+             <Link
+               href={`/dashboard/results/report/${student.id}`}
+               className="inline-flex px-6 py-2.5 rounded-xl bg-[#7C3AED] text-white text-sm font-bold hover:bg-[#6D28D9] transition-all shadow-lg shadow-[#7C3AED]/20"
+             >
+               View Report Card
+             </Link>
           </div>
           <div className="bg-white rounded-[32px] border border-[#E5E7EB] p-8 shadow-sm text-center">
              <div className="w-16 h-16 rounded-2xl bg-[#F3F4F6] text-[#9CA3AF] flex items-center justify-center mx-auto mb-4 text-2xl">📅</div>

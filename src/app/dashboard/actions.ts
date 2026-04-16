@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
+import { calculateGrade, calculateRemarks } from "@/lib/resultsUtils";
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -417,3 +418,242 @@ export async function deleteStaff(id: string) {
   }
 }
 
+// ─── Results Actions ─────────────────────────────────────────────────────────
+// calculateGrade and calculateRemarks are imported from @/lib/resultsUtils
+
+/**
+ * Bulk upsert scores for a class/subject/term/session.
+ * Scores are identified uniquely by (school_id, student_id, subject_id, class_id, term, session).
+ * Uses upsert so re-submitting a form updates rather than duplicates.
+ */
+export async function bulkUpsertResults(payload: {
+  classId: string;
+  subjectId: string;
+  term: string;
+  session: string;
+  scores: { studentId: string; score: number }[];
+}) {
+  try {
+    const schoolId = await getSchoolId();
+
+    // Validate all scores are 0–100 before touching the DB
+    for (const { score } of payload.scores) {
+      if (score < 0 || score > 100) {
+        throw new Error(`Invalid score ${score}. All scores must be between 0 and 100.`);
+      }
+    }
+
+    const rows = payload.scores.map(({ studentId, score }) => {
+      const grade = calculateGrade(score);
+      return {
+        school_id: schoolId,
+        student_id: studentId,
+        subject_id: payload.subjectId,
+        class_id: payload.classId,
+        term: payload.term,
+        session: payload.session,
+        score,
+        grade,
+        remarks: calculateRemarks(grade),
+      };
+    });
+
+    const { error } = await supabaseAdmin
+      .from("results")
+      .upsert(rows, {
+        onConflict: "school_id,student_id,subject_id,class_id,term,session",
+        ignoreDuplicates: false,
+      });
+
+    if (error) throw error;
+
+    revalidatePath("/dashboard/results");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Get all results for a given class/term/session — used by the results list page.
+ */
+export async function getResultsByClass(params: {
+  classId: string;
+  term: string;
+  session: string;
+}) {
+  try {
+    const schoolId = await getSchoolId();
+
+    const { data, error } = await supabaseAdmin
+      .from("results")
+      .select(`
+        id,
+        score,
+        grade,
+        remarks,
+        term,
+        session,
+        students ( id, first_name, last_name, admission_number ),
+        subjects ( id, name, code )
+      `)
+      .eq("school_id", schoolId)
+      .eq("class_id", params.classId)
+      .eq("term", params.term)
+      .eq("session", params.session)
+      .order("students(last_name)", { ascending: true });
+
+    if (error) throw error;
+    return { data: data ?? [], success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message, data: [] };
+  }
+}
+
+/**
+ * Get existing scores for a class/subject/term/session — pre-fills the bulk entry form.
+ */
+export async function getExistingScores(params: {
+  classId: string;
+  subjectId: string;
+  term: string;
+  session: string;
+}) {
+  try {
+    const schoolId = await getSchoolId();
+
+    const { data, error } = await supabaseAdmin
+      .from("results")
+      .select("student_id, score")
+      .eq("school_id", schoolId)
+      .eq("class_id", params.classId)
+      .eq("subject_id", params.subjectId)
+      .eq("term", params.term)
+      .eq("session", params.session);
+
+    if (error) throw error;
+
+    // Return as a map { studentId → score }
+    const scoreMap: Record<string, number> = {};
+    (data ?? []).forEach((r) => {
+      scoreMap[r.student_id] = r.score;
+    });
+
+    return { scoreMap, success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message, scoreMap: {} };
+  }
+}
+
+/**
+ * Get full report card data for a student.
+ * Calculates per-arm position ranking within the same class/term/session.
+ *
+ * Ranking logic:
+ *  1. Fetch every student in the same class_id for this term/session.
+ *  2. Sum total scores per student.
+ *  3. Sort descending — equal totals get the same position (dense rank).
+ *  4. Return the target student's position and class size.
+ */
+export async function getStudentReportCard(params: {
+  studentId: string;
+  term: string;
+  session: string;
+}) {
+  try {
+    const schoolId = await getSchoolId();
+
+    // 1. Get the student's class for this term's results
+    const { data: studentData, error: studentError } = await supabaseAdmin
+      .from("students")
+      .select("id, first_name, last_name, admission_number, gender, date_of_birth, class_id, classes(name, level)")
+      .eq("id", params.studentId)
+      .eq("school_id", schoolId)
+      .single();
+
+    if (studentError || !studentData) throw new Error("Student not found.");
+
+    const classId = studentData.class_id;
+    if (!classId) throw new Error("Student is not assigned to a class.");
+
+    // 2. Fetch this student's results for the term/session
+    const { data: ownResults, error: ownError } = await supabaseAdmin
+      .from("results")
+      .select(`
+        id, score, grade, remarks,
+        subjects ( id, name, code )
+      `)
+      .eq("school_id", schoolId)
+      .eq("student_id", params.studentId)
+      .eq("class_id", classId)
+      .eq("term", params.term)
+      .eq("session", params.session)
+      .order("subjects(name)", { ascending: true });
+
+    if (ownError) throw ownError;
+
+    const subjectResults = ownResults ?? [];
+    const totalScore = subjectResults.reduce((sum, r) => sum + (r.score ?? 0), 0);
+    const average = subjectResults.length > 0 ? totalScore / subjectResults.length : 0;
+
+    // 3. Fetch ALL students in the same class for this term/session to rank
+    const { data: classResults, error: classError } = await supabaseAdmin
+      .from("results")
+      .select("student_id, score")
+      .eq("school_id", schoolId)
+      .eq("class_id", classId)
+      .eq("term", params.term)
+      .eq("session", params.session);
+
+    if (classError) throw classError;
+
+    // Sum scores per student in the class
+    const studentTotals: Record<string, number> = {};
+    (classResults ?? []).forEach(({ student_id, score }) => {
+      studentTotals[student_id] = (studentTotals[student_id] ?? 0) + score;
+    });
+
+    // Dense rank: count how many distinct totals are STRICTLY higher than ours
+    const distinctHigherTotals = Object.values(studentTotals).filter(
+      (t) => t > totalScore
+    );
+    // Position = number of students with a higher total + 1
+    const position = distinctHigherTotals.length + 1;
+    const classSize = Object.keys(studentTotals).length;
+
+    return {
+      success: true,
+      student: studentData,
+      results: subjectResults,
+      totalScore,
+      average: Math.round(average * 100) / 100,
+      position,
+      classSize,
+      term: params.term,
+      session: params.session,
+    };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Delete a single result entry. Used for corrections.
+ */
+export async function deleteResult(id: string) {
+  try {
+    const schoolId = await getSchoolId();
+
+    const { error } = await supabaseAdmin
+      .from("results")
+      .delete()
+      .eq("id", id)
+      .eq("school_id", schoolId);
+
+    if (error) throw error;
+    revalidatePath("/dashboard/results");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
